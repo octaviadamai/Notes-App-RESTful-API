@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Notes</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+  <custom-header></custom-header>
+
+  <div class="container">
+    <button id="toggleModeButton">Dark/Light Mode</button>
+    <form id="searchForm">
+      <input type="text" id="searchInput" placeholder="Search notes...">
+      <button type="submit">Search</button>
+    </form>
+
+    <div class="new-note" id="newNote" style="cursor: pointer; display: flex; align-items: center;">
+      <img src="./icon.png" alt="Note Icon" style="width: 30px; height: 30px;">
+      <span style="margin-left: 10px;">Create A New Note</span>
+    </div>
+
+    <form id="newNoteForm" class="new-note-form" style="display: none;">
+      <input type="text" name="noteTitle" placeholder="Note Title..." required>
+      <textarea name="noteBody" placeholder="Fill in the Note..." required></textarea>
+      <button type="submit">Save</button>
+    </form>
+
+    <note-counter></note-counter>
+
+    <div class="loader"></div>
+    <div id="notes" class="notes"></div>
+  </div>
+
+  <custom-footer></custom-footer>
+  <script src="component.js"></script>
+</body>
+</html>

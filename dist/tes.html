@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catatanya Octa</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    /* CSS styling */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: grid;
+        grid-gap: 20px;
+    }
+    .note {
+        position: relative;
+        margin-bottom: 10px;
+        padding: 10px;
+        background: #f9f9f9;
+        border-left: 4px solid #3498db;
+        border-radius: 4px;
+    }
+    .note .note-content {
+        font-size: 16px;
+    }
+    .note .note-actions {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+    }
+    .note .note-actions button {
+        padding: 5px;
+        margin-left: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #777;
+    }
+    .note .note-actions button:hover {
+        color: #3498db;
+    }
+    .new-note-form {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+    .new-note-form input[type="text"], .new-note-form textarea {
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    .new-note-form button {
+        margin-bottom: 20px;
+        padding: 10px 16px;
+        background: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .new-note-form button:hover {
+        background: #2980b9;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="new-note" onclick="showForm()" style="cursor: pointer; display: flex; align-items: center;">
+        <img src="icon.png" alt="Note Icon" style="width: 30px; height: 30px;">
+        <span style="margin-left: 10px;">Buat Catatan Baru</span>
+    </div>
+    <form id="newNoteForm" class="new-note-form" style="display: none;">
+        <input type="text" name="noteTitle" placeholder="Judul catatan..." required>
+        <textarea name="noteBody" placeholder="Isi catatan..." required></textarea>
+        <button type="submit">Simpan</button>
+    </form>
+
+    <div id="notes" class="notes"></div>
+</div>
+
+<script>
+    // Data dummy catatan
+    const notesData = [
+    {
+    id: 'notes-jT-jjsyz61J8XKiI',
+    title: 'Welcome to Notes, Dimas!',
+    body: 'Welcome to Notes! This is your first note. You can archive it, delete it, or create new ones.',
+    createdAt: '2022-07-28T10:03:12.594Z',
+    archived: false,
+  },
+ 
+    ];
+
+    const notesContainer = document.getElementById('notes');
+
+    // Fungsi untuk membuat elemen catatan
+    class NoteElement extends HTMLElement {
+    connectedCallback() {
+        this.innerHTML = `
+            <div class="note">
+                <p class="note-content">${this.getAttribute('title')}</p>
+                <p class="note-body">${this.getAttribute('body')}</p>
+                <div class="note-actions" style="display: block;">
+                    <button onclick="editNote('${this.id}')">Edit</button>
+                    <button onclick="deleteNote('${this.id}')">Delete</button>
+                </div>
+                <small>${new Date(this.getAttribute('createdat')).toLocaleString()}</small>
+            </div>
+        `;
+    }
+}
+
+customElements.define('note-element', NoteElement);
+
+    // Fungsi untuk merender catatan
+    function renderNotes() {
+        notesData.forEach(note => {
+            createNoteElement(note);
+        });
+    }
+
+    function showForm() {
+    // Fungsi showForm() untuk menampilkan/menyembunyikan form tambah catatan
+    var form = document.querySelector('.new-note-form');
+    if (form.style.display === 'none' || form.style.display === '') {
+        form.style.display = 'flex';
+    } else {
+        form.style.display = 'none';
+    }
+}
+
+    // Event listener untuk submit form tambah catatan
+    document.getElementById('newNoteForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var title = this.noteTitle.value;
+        var body = this.noteBody.value;
+        if (title.trim() !== '' && body.trim() !== '') {
+            const newNote = {
+                id: 'notes-' + Math.random().toString(36).substr(2, 9),
+                title: title,
+                body: body,
+                createdAt: new Date().toISOString(),
+                archived: false
+            };
+            notesData.push(newNote);
+            createNoteElement(newNote);
+            this.reset();
+            this.style.display = 'none';
+        }
+    });
+
+    function editNote(noteId) {
+    const noteToEdit = notesData.find(note => note.id === noteId);
+    const form = document.querySelector('.new-note-form');
+    form.style.display = 'flex';
+    form.noteTitle.value = noteToEdit.title;
+    form.noteBody.value = noteToEdit.body;
+    form.dataset.mode = 'edit';
+    form.dataset.noteId = noteId; // Menyimpan ID catatan yang diedit
+}
+
+// Event listener untuk submit form tambah/edit catatan
+document.getElementById('newNoteForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const title = this.noteTitle.value;
+    const body = this.noteBody.value;
+    const mode = this.dataset.mode;
+    const noteId = this.dataset.noteId;
+    const smallElement = this.querySelector('small');
+    if (smallElement) {
+        smallElement.remove(); // Hapus elemen small yang menampilkan waktu catatan sebelumnya
+    }
+
+    if (noteId) {
+        const editedNote = notesData.find(note => note.id === noteId);
+        if (editedNote) {
+            editedNote.title = title;
+            editedNote.body = body;
+            // Merender ulang catatan yang diubah
+            notesContainer.innerHTML = '';
+            renderNotes();
+            // Reset form ke mode tambah catatan
+            this.reset();
+            this.style.display = 'none';
+            delete this.dataset.noteId; // Hapus data ID catatan yang sedang diubah
+        }
+    } else {
+        // Logika untuk menambahkan catatan baru jika tidak dalam mode edit
+        if (title.trim() !== '' && body.trim() !== '') {
+            const newNote = {
+                id: 'notes-' + Math.random().toString(36).substr(2, 9),
+                title: title,
+                body: body,
+                createdAt: new Date().toISOString(),
+                archived: false
+            };
+            notesData.push(newNote);
+            createNoteElement(newNote);
+            this.reset();
+            this.style.display = 'none';
+        }
+    }
+});
+
+
+
+    // Fungsi untuk menghapus catatan
+    function deleteNote(noteId) {
+        const confirmDelete = confirm('Apakah Anda yakin ingin menghapus catatan ini?');
+        if (confirmDelete) {
+            const noteIndexToDelete = notesData.findIndex(note => note.id === noteId);
+            notesData.splice(noteIndexToDelete, 1);
+            // Menghapus catatan dari tampilan
+            const noteElementToDelete = document.getElementById(noteId);
+            noteElementToDelete.remove();
+        }
+    }
+
+    // Memanggil fungsi untuk merender catatan saat halaman dimuat
+    renderNotes();
+</script>
+
+</body>
+</html>

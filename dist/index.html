@@ -1,0 +1,157 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Catatanya Octa</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"><style>/* CSS styling */
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #FFF9D0, #CAF4FF, #A0DEFF);
+
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: grid;
+      grid-gap: 20px;
+    }
+
+    .note {
+      position: relative;
+      margin-bottom: 10px;
+      padding: 10px;
+      background: #f9f9f9;
+      border-left: 4px solid #3498db;
+      border-radius: 4px;
+    }
+
+    .note .note-content {
+      font-size: 16px;
+    }
+
+    .note .note-actions {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+    }
+
+    .note .note-actions button {
+      padding: 5px;
+      margin-left: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #777;
+    }
+
+    .note .note-actions button:hover {
+      color: #3498db;
+    }
+
+    .new-note-form {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .new-note-form input[type="text"],
+    .new-note-form textarea {
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    .new-note-form button {
+      margin-bottom: 20px;
+      padding: 10px 16px;
+      background: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .new-note-form button:hover {
+      background: #2980b9;
+    }
+
+    .loader {
+      border: 16px solid #f3f3f3;
+      /* Light grey */
+      border-top: 16px solid #3498db;
+      /* Blue */
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      position: relative;
+      margin: 0 auto;
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    button#toggleModeButton {
+      background-color: #3498db;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+    }
+
+    .dark-mode {
+      background: linear-gradient(to right, #1a1a1a, #2f2f2f, #444444);
+    }
+
+    #searchForm {
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    #searchInput {
+      width: 70%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+
+    #searchInput:focus {
+      outline: none;
+      border-color: #3498db;
+    }
+
+    #searchForm button {
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #searchForm button:hover {
+      background-color: #2980b9;
+    }</style><script defer="defer" src="main.bundle.js"></script></head><body><div class="container"><button id="toggleModeButton">Dark/Light Mode</button><form id="searchForm"><input type="text" id="searchInput" placeholder="Search notes..."> <button type="submit">Search</button></form><div class="new-note" id="newNote" style="cursor: pointer; display: flex; align-items: center;"><img src="./icon.png" alt="Note Icon" style="width: 30px; height: 30px;"> <span style="margin-left: 10px;">Buat Catatan Baru</span></div><form id="newNoteForm" class="new-note-form" style="display: none;"><input type="text" name="noteTitle" placeholder="Judul catatan..." required> <textarea name="noteBody" placeholder="Isi catatan..." required></textarea> <button type="submit">Simpan</button></form><div id="notes" class="notes"><div class="loader"></div></div></div><script src="index.js"></script><script>function showForm() {
+      var form = document.querySelector(".new-note-form");
+      if (form.style.display === "none" || form.style.display === "") {
+        form.style.display = "flex";
+      } else {
+        form.style.display = "none";
+      }
+    }</script></body></html>
